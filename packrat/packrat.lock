@@ -3,6 +3,16 @@ PackratVersion: 0.4.8.1
 RVersion: 3.4.1
 Repos: CRAN=https://cran.rstudio.com/
 
+Package: BH
+Source: CRAN
+Version: 1.62.0-1
+Hash: 14dfb3e8ffe20996118306ff4de1fab2
+
+Package: DBI
+Source: CRAN
+Version: 0.7
+Hash: 1ab72df487f06ad5f0de05446cdd4bd6
+
 Package: R6
 Source: CRAN
 Version: 2.2.2
@@ -17,6 +27,11 @@ Package: Rcpp
 Source: CRAN
 Version: 0.12.11
 Hash: 2ee22f3b5e75dec80b1d8eca61cd96d8
+
+Package: assertthat
+Source: CRAN
+Version: 0.2.0
+Hash: e8805df54c65ac96d50235c44a82615c
 
 Package: colorspace
 Source: CRAN
@@ -37,6 +52,12 @@ Package: digest
 Source: CRAN
 Version: 0.6.12
 Hash: e53fb8c58673df868183697e39a6a4d6
+
+Package: dplyr
+Source: CRAN
+Version: 0.5.0
+Hash: 09fc57f582c74ffa20a57e0a48b27150
+Requires: R6, Rcpp, lazyeval, magrittr, tibble, BH, DBI, assertthat
 
 Package: ggplot2
 Source: CRAN

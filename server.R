@@ -9,32 +9,144 @@ library(shiny)
 library(ggplot2)
 library(data.table)
 
-ex_data <- read.csv("strong.csv", stringsAsFactors = F)
-ex_data$Date <- as.Date(ex_data$Date)
-ex_data$Volume <- ex_data$kg*ex_data$Reps
-ex_data <- data.table(ex_data)[,list(Volume = sum(Volume)),by=c("Date","Exercise.Name")]
+source("helper_functions.R")
+
+windowing <- Sys.Date() - 90
 
 shinyServer(function(input, output) {
 
 
-  output$squat <- renderPlot({
-    plot <- ggplot(ex_data[ex_data$Exercise.Name == "Squat",], aes(Date, Volume))
-    plot <- plot + geom_bar(stat = "identity")
+  output$squat_vol <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Squat",], aes(x=Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Volume") ,stat = "identity")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)))
     plot
   })
-  output$bench <- renderPlot({
-    plot <- ggplot(ex_data[ex_data$Exercise.Name == "Bench Press",], aes(Date, Volume))
-    plot <- plot + geom_bar(stat = "identity")
+  output$squat_weight <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Squat",], aes(x=Date))
+    plot <- plot + geom_point(aes(y=`Max_Weight`, colour = "Max Session Weight")) 
+    plot <- plot + geom_line(aes(y=`90-day-1RM`, colour = "90-day-max 1RM")) 
+    plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)),
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Squat"])))
     plot
   })
-  output$deadlift <- renderPlot({
-    plot <- ggplot(ex_data[ex_data$Exercise.Name == "Deadlift",], aes(Date, Volume))
-    plot <- plot + geom_bar(stat = "identity")
+  output$bench_vol <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Incline Dumbbell Press",], aes(x=Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Volume") ,stat = "identity")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)))
     plot
   })
-  output$press <- renderPlot({
-    plot <- ggplot(ex_data[ex_data$Exercise.Name == "Shoulder Press",], aes(Date, Volume))
-    plot <- plot + geom_bar(stat = "identity")
+  output$bench_weight <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Incline Dumbbell Press",], aes(x=Date))
+    plot <- plot + geom_point(aes(y=`Max_Weight`, colour = "Max Session Weight")) 
+    plot <- plot + geom_line(aes(y=`90-day-1RM`, colour = "90-day-max 1RM")) 
+    plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)),
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Incline Dumbbell Press"])))
+    plot
+  })
+  output$dead_vol <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Romanian Deadlift",], aes(x=Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Volume") ,stat = "identity")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)))
+    plot
+  })
+  output$dead_weight <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Romanian Deadlift",], aes(x=Date))
+    plot <- plot + geom_point(aes(y=`Max_Weight`, colour = "Max Session Weight")) 
+    plot <- plot + geom_line(aes(y=`90-day-1RM`, colour = "90-day-max 1RM")) 
+    plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)),
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Romanian Deadlift"])))
+    plot
+  })
+  output$press_vol <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Shoulder Press",], aes(x=Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Volume") ,stat = "identity")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)))
+    plot
+  })
+  output$press_weight <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == "Shoulder Press",], aes(x=Date))
+    plot <- plot + geom_point(aes(y=`Max_Weight`, colour = "Max Session Weight")) 
+    plot <- plot + geom_line(aes(y=`90-day-1RM`, colour = "90-day-max 1RM")) 
+    plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)),
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Shoulder Press"])))
+    plot
+  })
+ 
+  output$total_volume <- renderPlot({
+    plot_data <- data.table(big_table)[,list(Volume = sum(Volume),
+                                             `30-day-volume` = sum(`30-day-volume`),
+                                             `90-day-volume` = sum(`90-day-volume`)),
+                                       by="Date"]
+    plot <- ggplot(data = plot_data, aes(x = Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Daily Volume") ,stat = "identity", position = "stack")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + geom_line(aes(y=`90-day-volume`, colour = "90-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "blue", "black")) + theme(legend.position = "bottom")
+    plot
+  })
+  output$powerlifting <- renderPlot({
+    plot_data <- big_table[big_table$Exercise.Name == "Bench Press" | big_table$Exercise.Name == "Deadlift" |big_table$Exercise.Name == "Squat",
+                           c("Date","Exercise.Name","One_Rep_Max","30-day-Max","90-day-Max")]
+    plot_data <- plot_data[plot_data$One_Rep_Max!=0 | plot_data$`30-day-Max`!=0 | plot_data$`90-day-Max` !=0,]
+    
+    powerlifting_total <- data.table(plot_data)[,list(`30-day-Max` = sum(`30-day-Max`),
+                                                      `90-day-Max` = sum(`90-day-Max`),
+                                                      One_Rep_Max = 0,
+                                                      Exercise.Name = "Powerlifting Total")
+                                                ,by="Date"]
+    plot_data <- rbind(plot_data, powerlifting_total)
+    
+    plot <- ggplot(data = plot_data, aes(x = Date))
+    plot <- plot + geom_point(aes(y = One_Rep_Max, colour = Exercise.Name))
+    # plot <- plot + geom_line(aes(y = `30-day-Max`, colour = Exercise.Name))
+    plot <- plot + geom_line(aes(y = `90-day-Max`, colour = Exercise.Name))
+    plot <- plot + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(ylim = c(30,max(plot_data$`90-day-Max`))) + labs(y = "Weight")
+    plot
+  })
+  output$exercise_selector_chart_vol <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == input$exercise,], aes(x=Date))
+    plot <- plot + geom_bar(aes(y=Volume, colour = "Volume") ,stat = "identity")
+    plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)))
+    plot
+  })
+  output$exercise_selector_chart_weight <- renderPlot({
+    plot <- ggplot(big_table[big_table$Exercise.Name == input$exercise,], aes(x=Date))
+    plot <- plot + geom_point(aes(y=`Max_Weight`, colour = "Max Session Weight")) 
+    plot <- plot + geom_line(aes(y=`90-day-1RM`, colour = "90-day-max 1RM")) 
+    plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
+                                            max(big_table$Date)),
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == input$exercise])))
+    plot
+  })
+  output$aggregate_volume <- renderPlot({
+    plot <- ggplot(data = big_table, aes(x = Date, y = Volume, fill = Exercise.Name))
+    plot <- plot + geom_bar(stat = "identity") + theme(legend.position = "bottom")
     plot
   })
   

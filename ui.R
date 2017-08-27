@@ -9,8 +9,6 @@ library(shiny)
 
 shinyUI(fluidPage(
                   tags$head(
-                    tags$link(rel = "stylesheet", type = "text/css", href = "main.css")
-                  ),
   wellPanel(
     splitLayout(
       verticalLayout(
