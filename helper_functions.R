@@ -1,6 +1,5 @@
 library(dplyr)
 library(data.table)
-library(TTR)
 
 ex_data <- read.csv("strong.csv", stringsAsFactors = F)
 ex_data$Date <- as.Date(ex_data$Date)

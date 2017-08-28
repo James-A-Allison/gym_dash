@@ -8,6 +8,7 @@
 library(shiny)
 library(ggplot2)
 library(data.table)
+library(zoo)
 
 source("helper_functions.R")
 
@@ -22,7 +23,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
-                                            max(big_table$Date)))
+                                            max(big_table$Date))) + ggtitle("Squat Volume")
     plot
   })
   output$squat_weight <- renderPlot({
@@ -32,7 +33,7 @@ shinyServer(function(input, output) {
     plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
                                             max(big_table$Date)),
-                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Squat"])))
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Squat"]))) + ggtitle("Squat Weight")
     plot
   })
   output$bench_vol <- renderPlot({
@@ -41,7 +42,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
-                                            max(big_table$Date)))
+                                            max(big_table$Date))) + ggtitle("Bench Volume")
     plot
   })
   output$bench_weight <- renderPlot({
@@ -51,7 +52,7 @@ shinyServer(function(input, output) {
     plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
                                             max(big_table$Date)),
-                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Incline Dumbbell Press"])))
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Incline Dumbbell Press"]))) + ggtitle("Bench Weight")
     plot
   })
   output$dead_vol <- renderPlot({
@@ -60,7 +61,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
-                                            max(big_table$Date)))
+                                            max(big_table$Date))) + ggtitle("Deadlift Volume")
     plot
   })
   output$dead_weight <- renderPlot({
@@ -70,7 +71,7 @@ shinyServer(function(input, output) {
     plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
                                             max(big_table$Date)),
-                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Romanian Deadlift"])))
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Romanian Deadlift"]))) + ggtitle("Deadlift Weight")
     plot
   })
   output$press_vol <- renderPlot({
@@ -79,7 +80,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
-                                            max(big_table$Date)))
+                                            max(big_table$Date))) + ggtitle("Overhead Press Volume")
     plot
   })
   output$press_weight <- renderPlot({
@@ -89,7 +90,7 @@ shinyServer(function(input, output) {
     plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
                                             max(big_table$Date)),
-                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Shoulder Press"])))
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == "Shoulder Press"]))) + ggtitle("Overhead Press Weight")
     plot
   })
  
@@ -102,7 +103,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_bar(aes(y=Volume, colour = "Daily Volume") ,stat = "identity", position = "stack")
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + geom_line(aes(y=`90-day-volume`, colour = "90-day-average volume")) 
-    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "blue", "black")) + theme(legend.position = "bottom")
+    plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "blue", "black")) + theme(legend.position = "bottom") + ggtitle("Total Volume")
     plot
   })
   output$powerlifting <- renderPlot({
@@ -122,7 +123,7 @@ shinyServer(function(input, output) {
     # plot <- plot + geom_line(aes(y = `30-day-Max`, colour = Exercise.Name))
     plot <- plot + geom_line(aes(y = `90-day-Max`, colour = Exercise.Name))
     plot <- plot + theme(legend.position = "bottom")
-    plot <- plot + coord_cartesian(ylim = c(30,max(plot_data$`90-day-Max`))) + labs(y = "Weight")
+    plot <- plot + coord_cartesian(ylim = c(30,max(plot_data$`90-day-Max`))) + labs(y = "Weight") + ggtitle("Powerlifting Maxes")
     plot
   })
   output$exercise_selector_chart_vol <- renderPlot({
@@ -131,7 +132,7 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume")) 
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "black")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
-                                            max(big_table$Date)))
+                                            max(big_table$Date))) + ggtitle(paste(input$exercise, "Volume"))
     plot
   })
   output$exercise_selector_chart_weight <- renderPlot({
@@ -141,12 +142,12 @@ shinyServer(function(input, output) {
     plot <- plot + labs(colour = "Parameter", y = "Weight") + scale_colour_manual(values = c("green", "blue")) + theme(legend.position = "bottom")
     plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90, 
                                             max(big_table$Date)),
-                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == input$exercise])))
+                                   ylim = c(10,max(big_table$`90-day-1RM`[big_table$Exercise.Name == input$exercise]))) + ggtitle(paste(input$exercise, "Weight"))
     plot
   })
   output$aggregate_volume <- renderPlot({
     plot <- ggplot(data = big_table, aes(x = Date, y = Volume, fill = Exercise.Name))
-    plot <- plot + geom_bar(stat = "identity") + theme(legend.position = "bottom")
+    plot <- plot + geom_bar(stat = "identity") + theme(legend.position = "bottom") + ggtitle("Volume by Exercise")
     plot
   })
   
