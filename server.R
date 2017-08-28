@@ -13,7 +13,7 @@ source("helper_functions.R")
 
 # source("helper_functions.R")
 
-windowing <- Sys.Date() - 90
+# windowing <- Sys.Date() - 90
 
 shinyServer(function(input, output) {
 
