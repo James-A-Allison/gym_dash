@@ -1,6 +1,6 @@
 library(dplyr)
 library(data.table)
-library(zoo)
+# library(zoo)
 
 ex_data <- read.csv("strong.csv", stringsAsFactors = F)
 ex_data$Date <- as.Date(ex_data$Date)
