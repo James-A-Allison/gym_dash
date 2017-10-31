@@ -100,6 +100,8 @@ shinyServer(function(input, output) {
     plot <- plot + geom_line(aes(y=`30-day-volume`, colour = "30-day-average volume"))
     plot <- plot + geom_line(aes(y=`90-day-volume`, colour = "90-day-average volume"))
     plot <- plot + labs(colour = "Parameter") + scale_colour_manual(values = c("red", "blue", "black")) + theme(legend.position = "bottom") + ggtitle("Total Volume")
+    plot <- plot + coord_cartesian(xlim = c(max(big_table$Date) - 90,
+                                            max(big_table$Date)))
     plot
   })
   output$powerlifting <- renderPlot({
